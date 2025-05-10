@@ -1,0 +1,4 @@
+LiquidCrystal I2C
+DHT sensor library
+ESPAsyncWebServer
+ThingSpeak

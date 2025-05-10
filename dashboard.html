@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ativação do Sistema de Irrigação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #2f7eb2;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2f7eb2;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Registros de ativação do sistema de irrigação</h2>
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Data e Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<footer>Feito por Arthur, Higor e Victor<br /> Internet das Coisas - Projeto 2</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const channelID = '2573944'; 
+        const apiKey = 'ICGROWVURIO8Q4KX'; 
+        const numResults = 10; 
+        const fetchData = () => {
+            fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=${numResults}`)
+                .then(response => response.json())
+                .then(data => {
+                    const feeds = data.feeds.reverse();
+                    const tableBody = document.querySelector('#dataTable tbody');
+                    tableBody.innerHTML = ''; 
+
+                    feeds.forEach(feed => {
+                        const row = document.createElement('tr');
+                        const timeCell = document.createElement('td');
+                        const activationTime = feed.field1; 
+                        timeCell.textContent = activationTime;
+                        row.appendChild(timeCell);
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        };
+
+        fetchData();
+
+        setInterval(fetchData, 30000); 
+    });
+</script>
+
+</body>
+</html>
